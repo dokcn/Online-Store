@@ -47,6 +47,12 @@ dependencies:
   '@dcloudio/uni-quickapp-webview':
     specifier: 3.0.0-alpha-3081220230802001
     version: 3.0.0-alpha-3081220230802001(postcss@8.4.28)(vue@3.3.4)
+  '@dcloudio/uni-ui':
+    specifier: ^1.4.28
+    version: 1.4.28
+  '@vitejs/plugin-vue':
+    specifier: ^4.4.0
+    version: 4.4.0(vite@4.4.9)(vue@3.3.4)
   pinia:
     specifier: 2.0.27
     version: 2.0.27(typescript@5.1.6)(vue@3.3.4)
@@ -116,8 +122,8 @@ devDependencies:
     specifier: ^13.0.3
     version: 13.0.4
   miniprogram-api-typings:
-    specifier: ^3.9.1
-    version: 3.9.1
+    specifier: ^3.12.0
+    version: 3.12.0
   prettier:
     specifier: ^2.7.1
     version: 2.8.0
@@ -1375,7 +1381,7 @@ packages:
       '@dcloudio/uni-nvue-styler': 3.0.0-alpha-3081220230802001
       '@dcloudio/uni-shared': 3.0.0-alpha-3081220230802001
       '@rollup/pluginutils': 4.2.1
-      '@vitejs/plugin-vue': 4.2.3(vite@4.4.9)(vue@3.3.4)
+      '@vitejs/plugin-vue': 4.4.0(vite@4.4.9)(vue@3.3.4)
       '@vue/compiler-dom': 3.2.47
       '@vue/compiler-sfc': 3.2.47
       debug: 4.3.4
@@ -1901,6 +1907,10 @@ packages:
       - vue
     dev: false
 
+  /@dcloudio/uni-ui@1.4.28:
+    resolution: {integrity: sha512-e/lSbvR79KH9+d3D4ueNbvD6szigjO/5IyjBNmiTqaj0PTS324fBV3L6f3s1qpkYonM4rdOl000hVOcAg6Gh/A==}
+    dev: false
+
   /@dcloudio/uni-vue-devtools@3.0.0-alpha-3080220230511001(postcss@8.4.28)(vue@3.3.4):
     resolution: {integrity: sha512-dpDEnWF5hTsPve2pII/srsQYc6wdZbUt9Ejwy57TfuRz6JmPv+IBLTlGkIiZFo1RgQ3GmYyyFzKPuKiMfeLjIg==}
     dependencies:
@@ -1932,7 +1942,7 @@ packages:
       '@dcloudio/uni-shared': 3.0.0-alpha-3081220230802001
       '@rollup/pluginutils': 4.2.1
       '@vitejs/plugin-legacy': 4.1.1(terser@5.16.0)(vite@4.4.9)
-      '@vitejs/plugin-vue': 4.2.3(vite@4.4.9)(vue@3.3.4)
+      '@vitejs/plugin-vue': 4.4.0(vite@4.4.9)(vue@3.3.4)
       '@vitejs/plugin-vue-jsx': 3.0.1(vite@4.4.9)(vue@3.3.4)
       '@vue/compiler-core': 3.2.47
       '@vue/compiler-dom': 3.2.47
@@ -3416,8 +3426,8 @@ packages:
       - supports-color
     dev: true
 
-  /@vitejs/plugin-vue@4.2.3(vite@4.4.9)(vue@3.3.4):
-    resolution: {integrity: sha512-R6JDUfiZbJA9cMiguQ7jxALsgiprjBeHL5ikpXfJCH62pPHtI+JdJ5xWj6Ev73yXSlYl86+blXn1kZHQ7uElxw==}
+  /@vitejs/plugin-vue@4.4.0(vite@4.4.9)(vue@3.3.4):
+    resolution: {integrity: sha512-xdguqb+VUwiRpSg+nsc2HtbAUSGak25DXYvpQQi4RVU1Xq1uworyoH/md9Rfd8zMmPR/pSghr309QNcftUVseg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       vite: ^4.0.0
@@ -6274,8 +6284,8 @@ packages:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
     dev: false
 
-  /miniprogram-api-typings@3.9.1:
-    resolution: {integrity: sha512-oyratzOWyuFhBzONp06l0FBPu03ltCd1sRWoy2v38SnAKxtpZ8ySLTSEw//hIsBdocMda7fFZEjOG57L57mcUw==}
+  /miniprogram-api-typings@3.12.0:
+    resolution: {integrity: sha512-tE0zjq+3bFEgUROzCjXTdtLY+FmqiTX4kZWXc8bCC7M9wSHCriBz+ga1E2i1PcI+DQJoz2cyK8Cv2exJv6XEzA==}
     dev: true
 
   /mkdirp@0.5.6:
