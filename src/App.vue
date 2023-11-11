@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onLaunch, onShow, onHide } from '@dcloudio/uni-app'
-import '@/utils/interceptors'
+import '@/utils/http'
 import { useUserStore } from './stores'
 
 onLaunch(() => {

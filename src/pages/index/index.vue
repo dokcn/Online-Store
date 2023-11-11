@@ -1,13 +1,12 @@
 <script setup lang="ts">
-function change() {}
+import CustomNavBar from './components/CustomNavBar.vue'
 </script>
 
 <template>
   <view class="index">
-    <uni-calendar @change="change" />
+    <CustomNavBar />
+    <XtxCarousel />
   </view>
 </template>
 
-<style lang="scss">
-//
-</style>
+<style lang="scss"></style>

@@ -4,9 +4,9 @@ import { ref } from 'vue'
 export const useUserStore = defineStore(
   'user',
   () => {
-    const token = ref<string | null>(null)
+    const token = ref<string | undefined>()
 
-    const setToken = (tokenValue: string) => {
+    const setToken = (tokenValue: string | undefined) => {
       token.value = tokenValue
     }
 
@@ -15,6 +15,7 @@ export const useUserStore = defineStore(
     }
 
     return {
+      token,
       setToken,
       getToken,
     }
