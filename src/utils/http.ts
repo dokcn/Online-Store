@@ -45,7 +45,7 @@ uni.addInterceptor('request', requestInterceptor)
 uni.addInterceptor('uploadFile', requestInterceptor)
 
 interface ResponseType<T> {
-  code: string
+  code?: string
   msg: string
   result: T
 }

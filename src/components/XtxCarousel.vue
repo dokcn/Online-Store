@@ -1,37 +1,22 @@
 <template>
   <view class="carousel">
-    <swiper :interval="3000" :autoplay="false" circular @change="changeIndicatorIndex">
-      <swiper-item>
-        <navigator url="/pages/index/index" hover-class="none" class="navigator">
-          <image
-            src="https://pcapi-xiaotuxian-front-devtest.itheima.net/miniapp/uploads/slider_1.jpg"
-            mode="aspectFill"
-            class="image"
-          />
-        </navigator>
-      </swiper-item>
-      <swiper-item>
-        <navigator url="/pages/index/index" hover-class="none" class="navigator">
-          <image
-            src="https://pcapi-xiaotuxian-front-devtest.itheima.net/miniapp/uploads/slider_2.jpg"
-            mode="aspectFill"
-            class="image"
-          />
-        </navigator>
-      </swiper-item>
-      <swiper-item>
-        <navigator url="/pages/index/index" hover-class="none" class="navigator">
-          <image
-            src="https://pcapi-xiaotuxian-front-devtest.itheima.net/miniapp/uploads/slider_3.jpg"
-            mode="aspectFill"
-            class="image"
-          />
+    <swiper
+      :interval="3000"
+      :autoplay="false"
+      circular
+      @change="onChangeIndicatorIndex"
+      :current="activeIndex"
+    >
+      <swiper-item v-for="item in bannerData" :key="item.id">
+        <navigator :url="item.hrefUrl" hover-class="none" class="navigator">
+          <image :src="item.imgUrl" mode="aspectFill" class="image" />
         </navigator>
       </swiper-item>
     </swiper>
     <view class="indicator">
       <text
-        v-for="(item, index) in 3"
+        @tap="changeBannerIndex(index)"
+        v-for="(item, index) in bannerData.length"
         :key="item"
         class="dot"
         :class="{ active: index === activeIndex }"
@@ -41,18 +26,27 @@
 </template>
 
 <script lang="ts" setup>
+import type { BannerItem } from '@/types/home'
 import { ref } from 'vue'
+
+const props = defineProps<{
+  bannerData: BannerItem[]
+}>()
 
 let activeIndex = ref<number>(0)
 
 const onChangeIndicatorIndex: UniHelper.SwiperOnChange = (e) => {
   activeIndex.value = e.detail.current
 }
+
+function changeBannerIndex(targetIndex: number) {
+  activeIndex.value = targetIndex
+}
 </script>
 
 <style lang="scss">
 .carousel {
-  height: 280rpx;
+  height: 300rpx;
   position: relative;
   overflow: hidden;
   background-color: #efefef;
@@ -67,7 +61,7 @@ const onChangeIndicatorIndex: UniHelper.SwiperOnChange = (e) => {
       width: 40rpx;
       height: 6rpx;
       margin: 0 8rpx;
-      background-color: rgba(255, 255, 255, 0.6);
+      background-color: rgba(255, 255, 255, 0.8);
     }
     .active {
       background-color: #00c09d;
