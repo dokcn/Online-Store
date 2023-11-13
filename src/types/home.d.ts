@@ -10,3 +10,18 @@ export type BannerItem = {
   hrefUrl: string
   type: RedirectionType
 }
+
+export type CategoryItem = {
+  id: string
+  name: string
+  icon: string
+}
+
+export type RecommendationItem = {
+  id: string
+  alt: string
+  pictures: string[]
+  target: string
+  title: string
+  type: string
+}
