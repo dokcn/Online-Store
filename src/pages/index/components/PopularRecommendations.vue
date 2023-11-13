@@ -1,5 +1,5 @@
 <template>
-  <view class="panel hot">
+  <view class="hot">
     <view class="item" v-for="item in recommendationData" :key="item.id">
       <view class="title">
         <text class="title-text">{{ item.title }}</text>
@@ -21,7 +21,7 @@ defineProps<{
 </script>
 
 <style lang="scss">
-.panel {
+.hot {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
@@ -36,7 +36,7 @@ defineProps<{
       display: flex;
       align-items: center;
       .title-text {
-        font-size: 35rpx;
+        font-size: 33rpx;
       }
       .title-desc {
         font-size: 26rpx;
@@ -54,6 +54,21 @@ defineProps<{
       .image:first-of-type {
         margin-right: 15rpx;
       }
+    }
+
+    $radius: 20rpx;
+
+    &:nth-child(1) {
+      border-radius: $radius 0 0 0;
+    }
+    &:nth-child(2) {
+      border-radius: 0 $radius 0 0;
+    }
+    &:nth-child(3) {
+      border-radius: 0 0 0 $radius;
+    }
+    &:nth-child(4) {
+      border-radius: 0 0 $radius 0;
     }
   }
 }
