@@ -1,4 +1,10 @@
-import type { BannerItem, CategoryItem, RecommendationItem } from '@/types/home'
+import type { PageData } from '@/types/global'
+import type {
+  BannerItem,
+  CategoryItem,
+  RecommendationItem,
+  RecommendedForYouItem,
+} from '@/types/home'
 import { request } from '@/utils/http'
 
 export const getBannerDataAPI = (distributionSite = 1) => {
@@ -19,5 +25,15 @@ export const getCategoryAPI = () => {
 export const getRecommendationsAPI = () => {
   return request<RecommendationItem[]>({
     url: '/home/hot/mutli',
+  })
+}
+
+export const getRecommendedForYouAPI = (page: number = 1, pageSize: number = 10) => {
+  return request<PageData<RecommendedForYouItem>>({
+    url: '/home/goods/guessLike',
+    data: {
+      page,
+      pageSize,
+    },
   })
 }

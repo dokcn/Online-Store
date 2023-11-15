@@ -21,6 +21,7 @@ const safeTopHeight = `${safeAreaInsets!.top}px`
   background-size: cover;
   position: relative;
   display: flex;
+  min-height: 200rpx;
   flex-direction: column;
   .logo {
     display: flex;

@@ -26,6 +26,7 @@ defineProps<{
   flex-wrap: wrap;
   justify-content: space-evenly;
   margin: 0 16rpx;
+  min-height: 450rpx;
   .item {
     background-color: white;
     display: flex;
