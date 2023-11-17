@@ -6,26 +6,55 @@
       <image src="@/static/images/bubble.png" mode="aspectFill" />
     </view>
     <view class="item-list">
-      <navigator v-for="item in itemList.items" :key="item.id" class="item" hover-class="none">
+      <navigator v-for="item in itemList" :key="item.id" class="item" hover-class="none">
         <image :src="item.picture" mode="aspectFill" />
-        <text class="description">{{ stringBlank(item.desc) ? '暂无' : item.desc }}</text>
-        <text class="price-group">
+        <text class="description">{{ stringBlank(item.name) ? '暂无' : item.desc }}</text>
+        <view class="price-group">
           <text class="sign">￥</text>
           <text class="price">{{ item.price }}</text>
-        </text>
+        </view>
       </navigator>
     </view>
+    <view class="loading" v-show="loading">正在加载...</view>
   </view>
 </template>
 
 <script lang="ts" setup>
+import { getRecommendedForYouAPI } from '@/services/home'
 import type { PageData } from '@/types/global'
 import type { RecommendedForYouItem } from '@/types/home'
 import { stringBlank } from '@/utils/string_utils'
+import { ref, watch } from 'vue'
 
 const props = defineProps<{
-  itemList: PageData<RecommendedForYouItem>
+  isLoading: boolean
 }>()
+
+const emits = defineEmits(['finishLoad'])
+
+const loading = ref<boolean>(false)
+
+const pageInfo = ref<PageData<RecommendedForYouItem>>()
+const itemList = ref<RecommendedForYouItem[]>([])
+const getRecommendedForYouData = async (page?: number) => {
+  const data = await getRecommendedForYouAPI(page)
+  pageInfo.value = data.result
+  itemList.value.push(...data.result.items)
+}
+
+getRecommendedForYouData()
+
+watch(
+  () => props.isLoading,
+  async (newState) => {
+    if (newState) {
+      loading.value = true
+      await getRecommendedForYouData((pageInfo.value?.page ?? 0) + 1)
+      emits('finishLoad')
+      loading.value = false
+    }
+  },
+)
 </script>
 
 <style lang="scss">
@@ -51,6 +80,7 @@ const props = defineProps<{
     display: flex;
     flex-flow: row wrap;
     .item {
+      border-radius: 10rpx;
       background-color: white;
       padding: 20rpx;
       margin: 10rpx 0;
@@ -78,7 +108,9 @@ const props = defineProps<{
         font-size: 30rpx;
         color: #e04747;
         align-self: flex-start;
-        margin-left: -7rpx;
+        margin-left: -8rpx;
+        display: flex;
+        align-items: baseline;
         .sign {
           font-size: 28rpx;
         }
@@ -87,6 +119,11 @@ const props = defineProps<{
         }
       }
     }
+  }
+  .loading {
+    text-align: center;
+    padding: 10rpx 0 25rpx 0;
+    font-size: 32rpx;
   }
 }
 </style>

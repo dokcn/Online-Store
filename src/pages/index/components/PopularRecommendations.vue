@@ -57,7 +57,7 @@ defineProps<{
       }
     }
 
-    $radius: 20rpx;
+    $radius: 10rpx;
 
     &:nth-child(1) {
       border-radius: $radius 0 0 0;

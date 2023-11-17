@@ -2,7 +2,7 @@
   <view class="carousel">
     <swiper
       :interval="3000"
-      :autoplay="false"
+      :autoplay="true"
       circular
       @change="onChangeIndicatorIndex"
       :current="activeIndex"

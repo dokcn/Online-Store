@@ -1,17 +1,6 @@
 <script setup lang="ts">
-import {
-  getBannerDataAPI,
-  getCategoryAPI,
-  getRecommendationsAPI,
-  getRecommendedForYouAPI,
-} from '@/services/home'
-import type { PageData } from '@/types/global'
-import type {
-  BannerItem,
-  CategoryItem,
-  RecommendationItem,
-  RecommendedForYouItem,
-} from '@/types/home'
+import { getBannerDataAPI, getCategoryAPI, getRecommendationsAPI } from '@/services/home'
+import type { BannerItem, CategoryItem, RecommendationItem } from '@/types/home'
 import { onLoad, onReady } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import Category from './components/Category.vue'
@@ -53,28 +42,36 @@ const getRecommendationsData = async () => {
   recommendationsData.value = data.result
 }
 
-const recommendedForYouData = ref<PageData<RecommendedForYouItem>>()
-const getRecommendedForYouData = async () => {
-  const data = await getRecommendedForYouAPI()
-  recommendedForYouData.value = data.result
-}
-
 onLoad(() => {
   getBannerData()
   getCategoryData()
   getRecommendationsData()
-  getRecommendedForYouData()
 })
+
+const loading = ref<boolean>(false)
+
+function loadMoreProducts(e: UniHelper.ScrollViewOnScrolltolowerEvent) {
+  loading.value = true
+}
+
+function finishLoad() {
+  loading.value = false
+}
 </script>
 
 <template>
   <view class="index">
     <CustomNavBar />
-    <scroll-view scroll-y class="scroll" :style="{ height: scrollViewHeight + 'px' }">
+    <scroll-view
+      @scrolltolower="loadMoreProducts"
+      scroll-y
+      class="scroll"
+      :style="{ height: scrollViewHeight + 'px' }"
+    >
       <XtxCarousel :banner-data="bannerData" />
       <Category :category-data="categoryData" />
       <PopularRecommendations :recommendation-data="recommendationsData"></PopularRecommendations>
-      <XtxRecommendedForYou :itemList="recommendedForYouData" />
+      <XtxRecommendedForYou @finish-load="finishLoad" :isLoading="loading" />
     </scroll-view>
   </view>
 </template>
@@ -82,6 +79,7 @@ onLoad(() => {
 <style lang="scss">
 page {
   background-color: rgb(250, 250, 250);
+  // background-color: red;
   box-sizing: border-box;
 }
 </style>

@@ -3,10 +3,10 @@
 </script>
 
 <template>
-  <text class="price-group">
+  <view class="price-group">
     <text class="sign">￥</text>
     <text class="price">59.6</text>
-  </text>
+  </view>
 </template>
 
 <style lang="scss">
@@ -14,8 +14,8 @@
   font-size: 45rpx;
   color: #e04747;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
   .sign {
     font-size: 30rpx;
     display: inline-block;
