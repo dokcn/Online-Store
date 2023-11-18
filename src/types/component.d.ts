@@ -15,3 +15,5 @@ declare module 'vue' {
     XtxRecommendedForYou: typeof XtxRecommendedForYou
   }
 }
+
+export type XtxRecommendedForYouInstanceType = InstanceType<typeof XtxRecommendedForYou>

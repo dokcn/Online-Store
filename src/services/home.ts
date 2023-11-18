@@ -1,4 +1,4 @@
-import type { PageData } from '@/types/global'
+import type { PageResult, PageParams } from '@/types/global'
 import type {
   BannerItem,
   CategoryItem,
@@ -28,12 +28,9 @@ export const getRecommendationsAPI = () => {
   })
 }
 
-export const getRecommendedForYouAPI = (page: number = 1, pageSize: number = 10) => {
-  return request<PageData<RecommendedForYouItem>>({
+export const getRecommendedForYouAPI = (pageParams: PageParams) => {
+  return request<PageResult<RecommendedForYouItem>>({
     url: '/home/goods/guessLike',
-    data: {
-      page,
-      pageSize,
-    },
+    data: pageParams,
   })
 }

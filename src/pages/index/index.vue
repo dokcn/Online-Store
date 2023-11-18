@@ -6,6 +6,7 @@ import { ref } from 'vue'
 import Category from './components/Category.vue'
 import CustomNavBar from './components/CustomNavBar.vue'
 import PopularRecommendations from './components/PopularRecommendations.vue'
+import type { XtxRecommendedForYouInstanceType } from '@/types/component'
 
 const scrollViewHeight = ref<number>(0)
 
@@ -48,14 +49,12 @@ onLoad(() => {
   getRecommendationsData()
 })
 
-const loading = ref<boolean>(false)
+const recommendedForYouComponent = ref<XtxRecommendedForYouInstanceType>(null)
 
 function loadMoreProducts(e: UniHelper.ScrollViewOnScrolltolowerEvent) {
-  loading.value = true
-}
-
-function finishLoad() {
-  loading.value = false
+  if (recommendedForYouComponent.value) {
+    recommendedForYouComponent.value.getRecommendedForYouData()
+  }
 }
 </script>
 
@@ -71,7 +70,7 @@ function finishLoad() {
       <XtxCarousel :banner-data="bannerData" />
       <Category :category-data="categoryData" />
       <PopularRecommendations :recommendation-data="recommendationsData"></PopularRecommendations>
-      <XtxRecommendedForYou @finish-load="finishLoad" :isLoading="loading" />
+      <XtxRecommendedForYou ref="recommendedForYouComponent" />
     </scroll-view>
   </view>
 </template>

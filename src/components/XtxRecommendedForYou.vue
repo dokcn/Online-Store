@@ -8,7 +8,7 @@
     <view class="item-list">
       <navigator v-for="item in itemList" :key="item.id" class="item" hover-class="none">
         <image :src="item.picture" mode="aspectFill" />
-        <text class="description">{{ stringBlank(item.name) ? '暂无' : item.desc }}</text>
+        <text class="description">{{ stringBlank(item.name) ? '暂无' : item.name }}</text>
         <view class="price-group">
           <text class="sign">￥</text>
           <text class="price">{{ item.price }}</text>
@@ -16,45 +16,49 @@
       </navigator>
     </view>
     <view class="loading" v-show="loading">正在加载...</view>
+    <view class="end" v-show="noMoreItems"> 已经到底了 </view>
   </view>
 </template>
 
 <script lang="ts" setup>
 import { getRecommendedForYouAPI } from '@/services/home'
-import type { PageData } from '@/types/global'
+import type { PageParams } from '@/types/global'
 import type { RecommendedForYouItem } from '@/types/home'
 import { stringBlank } from '@/utils/string_utils'
-import { ref, watch } from 'vue'
-
-const props = defineProps<{
-  isLoading: boolean
-}>()
-
-const emits = defineEmits(['finishLoad'])
+import { ref } from 'vue'
 
 const loading = ref<boolean>(false)
 
-const pageInfo = ref<PageData<RecommendedForYouItem>>()
+const pageParams: Required<PageParams> = {
+  page: 0,
+  pageSize: 10,
+}
 const itemList = ref<RecommendedForYouItem[]>([])
-const getRecommendedForYouData = async (page?: number) => {
-  const data = await getRecommendedForYouAPI(page)
-  pageInfo.value = data.result
-  itemList.value.push(...data.result.items)
+const noMoreItems = ref<boolean>(false)
+
+const getRecommendedForYouData = async () => {
+  if (noMoreItems.value) {
+    return
+  }
+
+  ++pageParams.page
+
+  loading.value = true
+  const data = await getRecommendedForYouAPI(pageParams)
+  loading.value = false
+
+  if (data.result.items.length === 0) {
+    noMoreItems.value = true
+  } else {
+    itemList.value.push(...data.result.items)
+  }
 }
 
-getRecommendedForYouData()
+defineExpose({
+  getRecommendedForYouData,
+})
 
-watch(
-  () => props.isLoading,
-  async (newState) => {
-    if (newState) {
-      loading.value = true
-      await getRecommendedForYouData((pageInfo.value?.page ?? 0) + 1)
-      emits('finishLoad')
-      loading.value = false
-    }
-  },
-)
+getRecommendedForYouData()
 </script>
 
 <style lang="scss">
@@ -76,9 +80,17 @@ watch(
     }
   }
   .item-list {
-    justify-content: space-evenly;
     display: flex;
     flex-flow: row wrap;
+    // justify-content: space-evenly;
+    $item-margin: 15rpx;
+    .item:nth-child(odd) {
+      margin-left: $item-margin;
+      margin-right: $item-margin;
+    }
+    .item:nth-child(even) {
+      margin-right: $item-margin;
+    }
     .item {
       border-radius: 10rpx;
       background-color: white;
@@ -124,6 +136,12 @@ watch(
     text-align: center;
     padding: 10rpx 0 25rpx 0;
     font-size: 32rpx;
+  }
+  .end {
+    text-align: center;
+    padding: 10rpx 0 25rpx 0;
+    font-size: 28rpx;
+    color: rgb(117, 117, 117);
   }
 }
 </style>
