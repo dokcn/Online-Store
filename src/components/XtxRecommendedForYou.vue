@@ -54,11 +54,19 @@ const getRecommendedForYouData = async () => {
   }
 }
 
+getRecommendedForYouData()
+
+function resetData() {
+  pageParams.page = 0
+  itemList.value = []
+  noMoreItems.value = false
+  getRecommendedForYouData()
+}
+
 defineExpose({
   getRecommendedForYouData,
+  resetData,
 })
-
-getRecommendedForYouData()
 </script>
 
 <style lang="scss">

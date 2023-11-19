@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { getBannerDataAPI, getCategoryAPI, getRecommendationsAPI } from '@/services/home'
+import type { XtxRecommendedForYouInstanceType } from '@/types/component'
 import type { BannerItem, CategoryItem, RecommendationItem } from '@/types/home'
 import { onLoad, onReady } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import Category from './components/Category.vue'
 import CustomNavBar from './components/CustomNavBar.vue'
 import PopularRecommendations from './components/PopularRecommendations.vue'
-import type { XtxRecommendedForYouInstanceType } from '@/types/component'
 
 const scrollViewHeight = ref<number>(0)
 
@@ -56,16 +56,36 @@ function loadMoreProducts(e: UniHelper.ScrollViewOnScrolltolowerEvent) {
     recommendedForYouComponent.value.getRecommendedForYouData()
   }
 }
+
+const refresherTriggered = ref<boolean>(false)
+
+async function onRefresherRefresh(e: UniHelper.ScrollViewOnRefresherrefreshEvent) {
+  refresherTriggered.value = true
+  await Promise.allSettled([
+    getBannerData(),
+    getCategoryData(),
+    getRecommendationsData(),
+    recommendedForYouComponent.value.resetData(),
+  ])
+
+  refresherTriggered.value = false
+}
 </script>
 
 <template>
   <view class="index">
     <CustomNavBar />
+    <!-- <button @tap="refresherTriggered = true">refresh</button> -->
     <scroll-view
       @scrolltolower="loadMoreProducts"
       scroll-y
       class="scroll"
       :style="{ height: scrollViewHeight + 'px' }"
+      refresher-enabled
+      refresher-background="#00c19e"
+      @refresherrefresh="onRefresherRefresh"
+      :refresher-triggered="refresherTriggered"
+      enable-back-to-top
     >
       <XtxCarousel :banner-data="bannerData" />
       <Category :category-data="categoryData" />
