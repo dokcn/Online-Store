@@ -7,6 +7,7 @@ import { ref } from 'vue'
 import Category from './components/Category.vue'
 import CustomNavBar from './components/CustomNavBar.vue'
 import PopularRecommendations from './components/PopularRecommendations.vue'
+import Skeleton from './components/Skeleton.vue'
 
 const scrollViewHeight = ref<number>(0)
 
@@ -29,19 +30,24 @@ const bannerData = ref<BannerItem[]>([])
 const getBannerData = async () => {
   const data = await getBannerDataAPI()
   bannerData.value = data.result
+  loadedCount.value++
 }
 
 const categoryData = ref<Array<CategoryItem>>([])
 const getCategoryData = async () => {
   const data = await getCategoryAPI()
   categoryData.value = data.result
+  loadedCount.value++
 }
 
 const recommendationsData = ref<Array<RecommendationItem>>([])
 const getRecommendationsData = async () => {
   const data = await getRecommendationsAPI()
   recommendationsData.value = data.result
+  loadedCount.value++
 }
+
+const loadedCount = ref<number>(0)
 
 onLoad(() => {
   getBannerData()
@@ -60,7 +66,9 @@ function loadMoreProducts(e: UniHelper.ScrollViewOnScrolltolowerEvent) {
 const refresherTriggered = ref<boolean>(false)
 
 async function onRefresherRefresh(e: UniHelper.ScrollViewOnRefresherrefreshEvent) {
+  // loadedCount.value = 0
   refresherTriggered.value = true
+
   await Promise.allSettled([
     getBannerData(),
     getCategoryData(),
@@ -87,10 +95,13 @@ async function onRefresherRefresh(e: UniHelper.ScrollViewOnRefresherrefreshEvent
       :refresher-triggered="refresherTriggered"
       enable-back-to-top
     >
-      <XtxCarousel :banner-data="bannerData" />
-      <Category :category-data="categoryData" />
-      <PopularRecommendations :recommendation-data="recommendationsData"></PopularRecommendations>
-      <XtxRecommendedForYou ref="recommendedForYouComponent" />
+      <Skeleton v-if="loadedCount < 3"></Skeleton>
+      <template v-else>
+        <XtxCarousel :banner-data="bannerData" />
+        <Category :category-data="categoryData" />
+        <PopularRecommendations :recommendation-data="recommendationsData"></PopularRecommendations>
+        <XtxRecommendedForYou ref="recommendedForYouComponent" />
+      </template>
     </scroll-view>
   </view>
 </template>

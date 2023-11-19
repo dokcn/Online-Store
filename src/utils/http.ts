@@ -73,7 +73,8 @@ export const request = <T>(options: UniApp.RequestOptions) => {
       },
       fail(error) {
         uni.showToast({
-          title: JSON.stringify(error.errMsg),
+          // title: JSON.stringify(error.errMsg),
+          title: '网络错误',
           icon: 'none',
         })
         reject(error)
