@@ -1,11 +1,7 @@
-<script setup lang="ts">
-//
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <view class="login">login</view>
+  <view></view>
 </template>
 
-<style lang="scss">
-//
-</style>
+<style lang="scss"></style>

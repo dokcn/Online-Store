@@ -15,3 +15,15 @@ export type PageParams = {
   page?: number = 1
   pageSize?: number = 10
 }
+
+export type Product = {
+  id: string
+  name: string
+  desc: string
+  price: number
+  picture: string
+  discount: number
+  orderNum: number
+}
+
+export type XtxProductListInstanceType = InstanceType<typeof XtxProductList>
