@@ -5,21 +5,26 @@
       <text class="title">猜你喜欢</text>
       <image src="@/static/images/bubble.png" mode="aspectFill" />
     </view>
-    <XtxProductList ref="productListRef" :getProductsAPI="getProductsAPI" />
+    <XtxProductList ref="productListRef" :getProductsFunc="getProductsFunc" />
   </view>
 </template>
 
 <script lang="ts" setup>
 import { getRecommendedForYouAPI } from '@/services/home'
-import type { XtxProductListInstanceType } from '@/types/global'
+import type { XtxProductListInstanceType } from '@/types/component'
+import type { PageParams } from '@/types/global'
 import { ref } from 'vue'
 
-const getProductsAPI: Function = getRecommendedForYouAPI
+const getProductsFunc: Function = async (pageParams: PageParams) => {
+  const result = await getRecommendedForYouAPI(pageParams)
+  return result.result.items
+}
 
 const productListRef = ref<XtxProductListInstanceType>(null)
 
 const getRecommendedForYouData = () => {
-  productListRef.value.getProducts()
+  const ref = productListRef.value
+  if (ref) ref.getProducts()
 }
 
 const resetData = () => {

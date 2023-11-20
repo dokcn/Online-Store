@@ -1,5 +1,5 @@
 <template>
-  <view class="container">
+  <view class="container" :style="{ marginTop: marginTop }">
     <view class="item-list">
       <navigator v-for="item in itemList" :key="item.id" class="item" hover-class="none">
         <image :src="item.picture" mode="aspectFill" />
@@ -21,7 +21,8 @@ import { stringBlank } from '@/utils/string_utils'
 import { ref } from 'vue'
 
 const props = defineProps<{
-  getProductsAPI: Function
+  getProductsFunc: Function
+  marginTop: string
 }>()
 
 const itemList = ref<Product[]>([])
@@ -41,13 +42,13 @@ const getProducts = async () => {
   ++pageParams.page
 
   loading.value = true
-  const data = await props.getProductsAPI(pageParams)
+  const result = await props.getProductsFunc(pageParams)
   loading.value = false
 
-  if (data.result.items.length === 0) {
+  if (result.length === 0) {
     noMoreItems.value = true
   } else {
-    itemList.value.push(...data.result.items)
+    itemList.value.push(...result)
   }
 }
 
@@ -68,7 +69,7 @@ defineExpose({
 
 <style lang="scss">
 .container {
-  margin: 28rpx 0;
+  // margin: 28rpx 0;
   .item-list {
     display: flex;
     flex-flow: row wrap;

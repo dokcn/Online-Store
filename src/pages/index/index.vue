@@ -55,11 +55,11 @@ onLoad(() => {
   getRecommendationsData()
 })
 
-const recommendedForYouComponent = ref<XtxRecommendedForYouInstanceType>(null)
+const recommendedForYouRef = ref<XtxRecommendedForYouInstanceType>(null)
 
 function loadMoreProducts(e: UniHelper.ScrollViewOnScrolltolowerEvent) {
-  if (recommendedForYouComponent.value) {
-    recommendedForYouComponent.value.getRecommendedForYouData()
+  if (recommendedForYouRef.value) {
+    recommendedForYouRef.value.getRecommendedForYouData()
   }
 }
 
@@ -73,7 +73,7 @@ async function onRefresherRefresh(e: UniHelper.ScrollViewOnRefresherrefreshEvent
     getBannerData(),
     getCategoryData(),
     getRecommendationsData(),
-    recommendedForYouComponent.value.resetData(),
+    recommendedForYouRef.value.resetData(),
   ])
 
   refresherTriggered.value = false
@@ -100,7 +100,7 @@ async function onRefresherRefresh(e: UniHelper.ScrollViewOnRefresherrefreshEvent
         <XtxCarousel :banner-data="bannerData" />
         <Category :category-data="categoryData" />
         <PopularRecommendations :recommendation-data="recommendationsData"></PopularRecommendations>
-        <XtxRecommendedForYou ref="recommendedForYouComponent" />
+        <XtxRecommendedForYou ref="recommendedForYouRef" />
       </template>
     </scroll-view>
   </view>
@@ -108,7 +108,7 @@ async function onRefresherRefresh(e: UniHelper.ScrollViewOnRefresherrefreshEvent
 
 <style lang="scss">
 page {
-  background-color: rgb(250, 250, 250);
+  background-color: rgb(245, 245, 245);
   // background-color: red;
   box-sizing: border-box;
 }

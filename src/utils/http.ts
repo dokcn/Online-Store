@@ -1,4 +1,5 @@
 import { useUserStore } from '@/stores'
+import type { ResponseType } from '@/types/global'
 
 const baseUrl = 'https://pcapi-xiaotuxian-front-devtest.itheima.net'
 
@@ -43,12 +44,6 @@ const requestInterceptor = {
 
 uni.addInterceptor('request', requestInterceptor)
 uni.addInterceptor('uploadFile', requestInterceptor)
-
-interface ResponseType<T> {
-  code?: string
-  msg: string
-  result: T
-}
 
 export const request = <T>(options: UniApp.RequestOptions) => {
   return new Promise<ResponseType<T>>((resolve, reject) => {

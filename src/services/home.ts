@@ -1,5 +1,5 @@
-import type { PageResult, PageParams, Product } from '@/types/global'
-import type { BannerItem, CategoryItem, RecommendationItem } from '@/types/home'
+import type { PageParams, PageResult } from '@/types/global'
+import type { BannerItem, CategoryItem, ProductExtra, RecommendationItem } from '@/types/home'
 import { request } from '@/utils/http'
 
 export const getBannerDataAPI = (distributionSite = 1) => {
@@ -24,7 +24,7 @@ export const getRecommendationsAPI = () => {
 }
 
 export const getRecommendedForYouAPI = (pageParams: PageParams) => {
-  return request<PageResult<Product>>({
+  return request<PageResult<ProductExtra>>({
     url: '/home/goods/guessLike',
     data: pageParams,
   })

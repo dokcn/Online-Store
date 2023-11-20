@@ -1,3 +1,9 @@
+export interface ResponseType<T> {
+  code?: string
+  msg: string
+  result: T
+}
+
 export type PageResult<T> = {
   /**总条数 */
   counts: number
@@ -22,8 +28,4 @@ export type Product = {
   desc: string
   price: number
   picture: string
-  discount: number
-  orderNum: number
 }
-
-export type XtxProductListInstanceType = InstanceType<typeof XtxProductList>
