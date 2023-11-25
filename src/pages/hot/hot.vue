@@ -1,31 +1,76 @@
 <script lang="ts" setup>
-import { getHotNewAPI } from '@/services/hot'
+import {
+  getHotInVogueAPI,
+  getHotNewAPI,
+  getHotOneStopAPI,
+  getHotPreferenceAPI,
+} from '@/services/hot'
 import type { XtxProductListInstanceType } from '@/types/component'
-import type { PageParams } from '@/types/global'
+import type { ResponseType } from '@/types/global'
 import type { HotRequestResult } from '@/types/hot'
+import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 
-const productListRef = ref<XtxProductListInstanceType>(null)
-
-const loadMoreProducts = () => {
-  const ref = productListRef.value
-  if (ref) ref.getProducts()
-}
+let type: string
+let api: Function
 
 const data = ref<HotRequestResult>()
+const currentSubTypeId = ref<string>('')
 
-const getProductsFunc = async (pageParams: PageParams) => {
-  const result = await getHotNewAPI({
-    ...pageParams,
-    // subType:
-  })
+onLoad((options) => {
+  type = options!.type
+  switch (type) {
+    case '1':
+      api = getHotPreferenceAPI
+      break
+    case '2':
+      api = getHotInVogueAPI
+      break
+    case '3':
+      api = getHotOneStopAPI
+      break
+    case '4':
+      api = getHotNewAPI
+      break
+    default:
+      throw new RangeError(type)
+  }
+  getBasicData()
+})
 
+const getBasicData = async () => {
+  const result = await api({})
   data.value = result.result
-  uni.setNavigationBarTitle({
-    title: result.result.title,
-  })
+  currentSubTypeId.value = result.result.subTypes[0].id
+}
 
-  return result.result.subTypes[0].goodsItems.items
+const productListRefs: { [index: string]: XtxProductListInstanceType } = {}
+
+const refFunc = (el: XtxProductListInstanceType, subTypeId: string) => {
+  productListRefs[subTypeId] = el
+}
+
+const getProducts = async (subTypeId: string) => {
+  const ref = productListRefs[subTypeId]
+  if (ref) {
+    const pageParams = ref.beforeFetchData()
+    if (!pageParams) return
+
+    const requestResult: ResponseType<any> = await api({
+      ...pageParams,
+      subType: subTypeId,
+    })
+    const finalResult: HotRequestResult = requestResult.result
+
+    uni.setNavigationBarTitle({
+      title: finalResult.title,
+    })
+
+    ref.afterFetchData(
+      finalResult.subTypes.find((el: HotRequestResult['subTypes'][number]) => el.goodsItems)!
+        .goodsItems.items,
+    )
+  }
 }
 </script>
 
@@ -33,13 +78,29 @@ const getProductsFunc = async (pageParams: PageParams) => {
   <view class="container">
     <image class="banner" :src="data?.bannerPicture" mode="aspectFill" />
     <view class="bar">
-      <navigator class="subType" v-for="subType in data?.subTypes" :key="subType.id">
-        <text class="title">{{ subType.title }}</text>
-        <view class="indicator"></view>
-      </navigator>
+      <view class="subType" v-for="subType in data?.subTypes" :key="subType.id">
+        <text class="title" @tap="currentSubTypeId = subType.id">{{ subType.title }}</text>
+        <!-- todo change indicator to after pesudo class -->
+        <view
+          class="indicator"
+          :style="{ visibility: currentSubTypeId === subType.id ? 'visible' : 'hidden' }"
+        ></view>
+      </view>
     </view>
-    <scroll-view class="itemList" scroll-y enable-back-to-top @scrolltolower="loadMoreProducts">
-      <XtxProductList ref="productListRef" :getProductsFunc="getProductsFunc" marginTop="10rpx" />
+    <scroll-view
+      v-for="subType in data?.subTypes"
+      :key="subType.id"
+      v-show="currentSubTypeId === subType.id"
+      class="itemList"
+      scroll-y
+      enable-back-to-top
+      @scrolltolower="getProducts(currentSubTypeId)"
+    >
+      <XtxProductList
+        @componentMounted="getProducts(subType.id)"
+        :ref="(el: XtxProductListInstanceType) => refFunc(el, subType.id)"
+        marginTop="10rpx"
+      />
     </scroll-view>
   </view>
 </template>

@@ -19,4 +19,5 @@ declare module 'vue' {
 }
 
 export type XtxRecommendedForYouInstanceType = InstanceType<typeof XtxRecommendedForYou>
+
 export type XtxProductListInstanceType = InstanceType<typeof XtxProductList>

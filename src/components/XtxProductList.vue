@@ -18,10 +18,9 @@
 <script setup lang="ts">
 import type { PageParams, Product } from '@/types/global'
 import { stringBlank } from '@/utils/string_utils'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const props = defineProps<{
-  getProductsFunc: Function
   marginTop: string
 }>()
 
@@ -34,15 +33,16 @@ const pageParams: Required<PageParams> = {
   pageSize: 10,
 }
 
-const getProducts = async () => {
-  if (noMoreItems.value) {
-    return
-  }
+const beforeFetchData = () => {
+  if (noMoreItems.value) return null
 
   ++pageParams.page
 
   loading.value = true
-  const result = await props.getProductsFunc(pageParams)
+  return pageParams
+}
+
+const afterFetchData = (result: any[]) => {
   loading.value = false
 
   if (result.length === 0) {
@@ -56,14 +56,18 @@ const resetData = () => {
   pageParams.page = 0
   itemList.value = []
   noMoreItems.value = false
-  getProducts()
 }
 
-getProducts()
-
 defineExpose({
-  getProducts,
+  beforeFetchData,
+  afterFetchData,
   resetData,
+})
+
+const emits = defineEmits(['componentMounted'])
+
+onMounted(() => {
+  emits('componentMounted')
 })
 </script>
 

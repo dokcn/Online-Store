@@ -23,20 +23,18 @@ const requestInterceptor = {
     if (token) {
       args.header['Authorization'] = token
     }
-
-    // console.log('')
   },
   success(res: UniApp.RequestSuccessCallbackResult) {
     // console.log('success')
     // console.log(res)
     // console.log('')
   },
-  fail(err) {
+  fail(err: Error) {
     // console.log('fail')
     // console.log(err)
     // console.log('')
   },
-  complete(res) {
+  complete(res: any) {
     // console.log('complete')
     // console.log('')
   },
@@ -50,7 +48,7 @@ export const request = <T>(options: UniApp.RequestOptions) => {
     uni.request({
       ...options,
       success(result) {
-        console.log(result)
+        // console.log(result)
 
         const statusCode = result.statusCode
         if (statusCode >= 200 && statusCode < 300) resolve(result.data as ResponseType<T>)

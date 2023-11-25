@@ -5,9 +5,15 @@
         <text class="title-text">{{ item.title }}</text>
         <text class="title-desc">{{ item.alt }}</text>
       </view>
-      <navigator hover-class="none" class="cards">
-        <image v-for="pic in item.pictures" :key="pic" :src="pic" mode="aspectFill" class="image" />
-      </navigator>
+      <view class="cards">
+        <navigator
+          v-for="pic in item.pictures"
+          :key="pic"
+          :url="`/pages/hot/hot?type=${item.type}`"
+        >
+          <image :src="pic" mode="aspectFill" class="image" />
+        </navigator>
+      </view>
     </view>
   </view>
 </template>
@@ -31,13 +37,14 @@ defineProps<{
     background-color: white;
     display: flex;
     flex-direction: column;
-    margin-bottom: 7rpx;
-    padding: 20rpx 20rpx;
+    margin-bottom: 5rpx;
+    padding: 20rpx 10rpx;
     .title {
       display: flex;
       align-items: center;
       .title-text {
         font-size: 33rpx;
+        margin-left: 4rpx;
       }
       .title-desc {
         font-size: 26rpx;
@@ -52,8 +59,8 @@ defineProps<{
         width: 150rpx;
         height: 150rpx;
       }
-      .image:first-of-type {
-        margin-right: 15rpx;
+      navigator {
+        margin-right: 20rpx;
       }
     }
 
