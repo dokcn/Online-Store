@@ -7,10 +7,10 @@ export interface ResponseType<T> {
 export type PageResult<T> = {
   /**总条数 */
   counts: number
-  /**每页条数 */
-  pageSize: number
   /**总页数 */
   pages: number
+  /**每页条数 */
+  pageSize: number
   /**当前页数 */
   page: number
   /**当前页数据 */
@@ -28,4 +28,5 @@ export type Product = {
   desc: string
   price: number
   picture: string
+  orderNum: number
 }

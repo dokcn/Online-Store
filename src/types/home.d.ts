@@ -1,5 +1,3 @@
-import type { Product } from './global'
-
 export enum RedirectionType {
   Page = 1,
   Html = 2,
@@ -26,9 +24,4 @@ export type RecommendationItem = {
   target: string
   title: string
   type: string
-}
-
-export type ProductExtra = Product & {
-  discount: number
-  orderNum: number
 }

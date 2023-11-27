@@ -1,7 +1,7 @@
 <template>
   <view class="container" :style="{ marginTop: marginTop }">
     <view class="item-list">
-      <navigator v-for="item in itemList" :key="item.id" class="item" hover-class="none">
+      <navigator v-for="item in productList" :key="item.id" class="item" hover-class="none">
         <image :src="item.picture" mode="aspectFill" />
         <text class="description">{{ stringBlank(item.name) ? '暂无' : item.name }}</text>
         <view class="price-group">
@@ -18,27 +18,27 @@
 <script setup lang="ts">
 import type { PageParams, Product } from '@/types/global'
 import { stringBlank } from '@/utils/string_utils'
-import { onMounted, ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 
 const props = defineProps<{
   marginTop: string
 }>()
 
-const itemList = ref<Product[]>([])
+const productList = ref<Product[]>([])
 const loading = ref<boolean>(false)
 const noMoreItems = ref<boolean>(false)
 
 const pageParams: Required<PageParams> = {
-  page: 0,
+  page: import.meta.env.DEV ? 32 : 0,
   pageSize: 10,
 }
 
 const beforeFetchData = () => {
   if (noMoreItems.value) return null
 
+  loading.value = true
   ++pageParams.page
 
-  loading.value = true
   return pageParams
 }
 
@@ -48,13 +48,13 @@ const afterFetchData = (result: any[]) => {
   if (result.length === 0) {
     noMoreItems.value = true
   } else {
-    itemList.value.push(...result)
+    productList.value.push(...result)
   }
 }
 
 const resetData = () => {
   pageParams.page = 0
-  itemList.value = []
+  productList.value = []
   noMoreItems.value = false
 }
 
@@ -64,10 +64,10 @@ defineExpose({
   resetData,
 })
 
-const emits = defineEmits(['componentMounted'])
+const emits = defineEmits(['componentLoaded'])
 
-onMounted(() => {
-  emits('componentMounted')
+onBeforeMount(() => {
+  emits('componentLoaded')
 })
 </script>
 

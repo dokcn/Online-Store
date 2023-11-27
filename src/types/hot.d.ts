@@ -1,4 +1,4 @@
-import type { PageParams, Product } from './global'
+import type { PageParams, PageResult, Product } from '@/types/global'
 
 export type HotQueryParams = PageParams & {
   subType?: string
@@ -11,12 +11,6 @@ export type HotRequestResult = {
   subTypes: {
     id: string
     title: string
-    goodsItems: {
-      page: string
-      pageSize: string
-      counts: string
-      pages: string
-      items: Array<Product>
-    }
+    goodsItems: PageResult<Product>
   }[]
 }

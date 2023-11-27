@@ -1,48 +1,32 @@
 <script lang="ts" setup>
-import {
-  getHotInVogueAPI,
-  getHotNewAPI,
-  getHotOneStopAPI,
-  getHotPreferenceAPI,
-} from '@/services/hot'
+import { getHotRecommendationAPI } from '@/services/hot'
 import type { XtxProductListInstanceType } from '@/types/component'
-import type { ResponseType } from '@/types/global'
 import type { HotRequestResult } from '@/types/hot'
-import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 
-let type: string
-let api: Function
+const typeMap: { [index: string]: string } = {
+  1: '/hot/preference',
+  2: '/hot/inVogue',
+  3: '/hot/oneStop',
+  4: '/hot/new',
+}
 
 const data = ref<HotRequestResult>()
 const currentSubTypeId = ref<string>('')
 
-onLoad((options) => {
-  type = options!.type
-  switch (type) {
-    case '1':
-      api = getHotPreferenceAPI
-      break
-    case '2':
-      api = getHotInVogueAPI
-      break
-    case '3':
-      api = getHotOneStopAPI
-      break
-    case '4':
-      api = getHotNewAPI
-      break
-    default:
-      throw new RangeError(type)
-  }
-  getBasicData()
-})
+const query = defineProps<{ type: string }>()
 
 const getBasicData = async () => {
-  const result = await api({})
+  const result = await getHotRecommendationAPI(typeMap[query.type])
   data.value = result.result
   currentSubTypeId.value = result.result.subTypes[0].id
+
+  uni.setNavigationBarTitle({
+    title: result.result.title,
+  })
 }
+
+getBasicData()
 
 const productListRefs: { [index: string]: XtxProductListInstanceType } = {}
 
@@ -56,15 +40,12 @@ const getProducts = async (subTypeId: string) => {
     const pageParams = ref.beforeFetchData()
     if (!pageParams) return
 
-    const requestResult: ResponseType<any> = await api({
-      ...pageParams,
-      subType: subTypeId,
-    })
-    const finalResult: HotRequestResult = requestResult.result
-
-    uni.setNavigationBarTitle({
-      title: finalResult.title,
-    })
+    const finalResult: HotRequestResult = (
+      await getHotRecommendationAPI(typeMap[query.type], {
+        ...pageParams,
+        subType: subTypeId,
+      })
+    ).result
 
     ref.afterFetchData(
       finalResult.subTypes.find((el: HotRequestResult['subTypes'][number]) => el.goodsItems)!
@@ -97,7 +78,7 @@ const getProducts = async (subTypeId: string) => {
       @scrolltolower="getProducts(currentSubTypeId)"
     >
       <XtxProductList
-        @componentMounted="getProducts(subType.id)"
+        @componentLoaded="getProducts(subType.id)"
         :ref="(el: XtxProductListInstanceType) => refFunc(el, subType.id)"
         marginTop="10rpx"
       />

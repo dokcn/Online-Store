@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import { onLaunch, onShow, onHide } from '@dcloudio/uni-app'
-import '@/utils/http'
-import { useUserStore } from './stores'
+import { onHide, onLaunch, onShow } from '@dcloudio/uni-app'
 
 onLaunch(() => {
   console.log('App Launch')
-  // useUserStore().setToken('12345')
 })
 onShow(() => {
   console.log('App Show')
