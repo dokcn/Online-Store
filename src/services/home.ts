@@ -2,7 +2,7 @@ import type { PageParams, PageResult, Product } from '@/types/global'
 import type { BannerItem, CategoryItem, RecommendationItem } from '@/types/home'
 import { request } from '@/utils/http'
 
-export const getBannerDataAPI = (distributionSite = 1) => {
+export const getBannerDataAPI = (distributionSite: number = 1) => {
   return request<BannerItem[]>({
     url: '/home/banner',
     data: {
