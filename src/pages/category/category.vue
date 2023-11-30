@@ -3,11 +3,14 @@ import { getCategoryDataAPI } from '@/services/category'
 import { getBannerDataAPI } from '@/services/home'
 import type { CategoryResult } from '@/types/category'
 import type { BannerItem } from '@/types/home'
+import { toShuffled } from '@/utils/array_utils'
 import { ref } from 'vue'
 
 const data = ref<CategoryResult>([])
 const getCategoryData = async () => {
-  data.value = (await getCategoryDataAPI()).result
+  const result = (await getCategoryDataAPI()).result
+  data.value = result
+  // data.value.push(...result)
 }
 getCategoryData()
 
@@ -48,7 +51,7 @@ const currentIndex = ref<number>(0)
         enable-back-to-top
       >
         <view class="carousel-container">
-          <XtxCarousel class="carousel" :bannerData="carouselData" />
+          <XtxCarousel class="carousel" :bannerData="toShuffled(carouselData)" />
         </view>
         <view class="level-two-category" v-for="levelTwo in levelOne.children" :key="levelTwo.id">
           <view class="sub-category-title">
@@ -113,19 +116,19 @@ page {
             &::after {
               content: '';
               position: absolute;
-              bottom: 0;
+              top: 0;
               background-color: rgb(216, 216, 216);
               width: 110rpx;
               height: 1rpx;
             }
-            &:last-child::after {
+            &:first-child::after {
               display: none;
             }
             // &:first-child {
             //   margin-top: 10rpx;
             // }
             &:last-child {
-              padding-bottom: 10rpx;
+              margin-bottom: 10rpx;
             }
           }
           /*.category-title:nth-child(n + 2) {
@@ -141,6 +144,12 @@ page {
               position: absolute;
               left: 0;
               background-color: #00c09d;
+            }
+            &::after {
+              visibility: hidden;
+            }
+            & + .category-title::after {
+              visibility: hidden;
             }
           }
         }
