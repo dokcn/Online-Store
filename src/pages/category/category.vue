@@ -5,12 +5,16 @@ import type { CategoryResult } from '@/types/category'
 import type { BannerItem } from '@/types/home'
 import { toShuffled } from '@/utils/array_utils'
 import { ref } from 'vue'
+import Skeleton from './components/Skeleton.vue'
+
+const finishLoad = ref<boolean>(false)
 
 const data = ref<CategoryResult>([])
 const getCategoryData = async () => {
   const result = (await getCategoryDataAPI()).result
   data.value = result
   // data.value.push(...result)
+  finishLoad.value = true
 }
 getCategoryData()
 
@@ -24,7 +28,8 @@ const currentIndex = ref<number>(0)
 </script>
 
 <template>
-  <view class="container">
+  <Skeleton v-if="!finishLoad" />
+  <view class="container" v-else>
     <view class="search-bar">
       <text class="search-placeholder icon-search"> 女装</text>
     </view>
