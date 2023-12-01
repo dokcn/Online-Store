@@ -66,7 +66,7 @@ const currentIndex = ref<number>(0)
           <view class="product-list">
             <navigator class="product" v-for="product of levelTwo.goods" :key="product.id">
               <image class="product-image" :src="product.picture" mode="aspectFill" />
-              <text class="product-title">{{ product.name }}</text>
+              <text class="product-title ellipsis">{{ product.name }}</text>
               <view class="price-group">
                 <text class="rmb-sign">￥</text>
                 <text class="price">{{ product.price }}</text>
@@ -190,7 +190,10 @@ page {
               flex-direction: column;
               $product-width: 150rpx;
               width: $product-width;
-              margin-right: 20rpx;
+              margin-right: 25rpx;
+              &:nth-child(3n) {
+                margin-right: 0;
+              }
               .product-image {
                 width: $product-width;
                 height: $product-width;
@@ -200,12 +203,6 @@ page {
                 font-size: 20rpx;
                 height: 55rpx;
                 line-height: 1.4;
-
-                display: -webkit-box;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
               }
               .price-group {
                 margin: 4rpx 0 20rpx -4rpx;

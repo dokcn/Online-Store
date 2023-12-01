@@ -10,7 +10,7 @@
       </view>
       <view class="two-column">
         <view class="level-one-category">
-          <scroll-view scroll-y="true" class="level-one-category-scroll-view">
+          <scroll-view :scroll-y="true" class="level-one-category-scroll-view">
             <text
               class="category-title active sk-transparent sk-text-14-2857-384 sk-text sk-pseudo sk-pseudo-circle"
               >居家</text
@@ -49,11 +49,11 @@
             >
           </scroll-view>
         </view>
-        <scroll-view enable-back-to-top="true" scroll-y="true" class="main">
+        <scroll-view :enable-back-to-top="true" :scroll-y="true" class="main">
           <view class="carousel-container">
             <view is="components/XtxCarousel" class="carousel">
               <view class="carousel XtxCarousel--carousel">
-                <swiper circular="true" autoplay="false" current="0" interval="3000">
+                <swiper :circular="true" :autoplay="false" :current="0" :interval="3000">
                   <swiper-item
                     style="
                       position: absolute;
