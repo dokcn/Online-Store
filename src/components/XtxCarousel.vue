@@ -8,6 +8,7 @@
       :current="activeIndex"
     >
       <swiper-item v-for="item in bannerData" :key="item.id">
+        <!-- todo handle url navigation -->
         <navigator :url="item.hrefUrl" hover-class="none" class="navigator">
           <image :src="item.imgUrl" mode="aspectFill" class="image" />
         </navigator>

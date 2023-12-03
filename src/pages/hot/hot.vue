@@ -61,7 +61,6 @@ const getProducts = async (subTypeId: string) => {
     <view class="bar">
       <view class="subType" v-for="subType in data?.subTypes" :key="subType.id">
         <text class="title" @tap="currentSubTypeId = subType.id">{{ subType.title }}</text>
-        <!-- todo change indicator to after pesudo class -->
         <view
           class="indicator"
           :style="{ visibility: currentSubTypeId === subType.id ? 'visible' : 'hidden' }"

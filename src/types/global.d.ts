@@ -28,5 +28,6 @@ export type Product = {
   desc: string
   price: number
   picture: string
+  /**下单数量 */
   orderNum: number
 }

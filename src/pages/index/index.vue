@@ -19,7 +19,7 @@ onReady(() => {
         .createSelectorQuery()
         .select('.scroll')
         .boundingClientRect((data) => {
-          scrollViewHeight.value = windowHeight - data.top
+          scrollViewHeight.value = windowHeight - (data as UniApp.NodeInfo).top!
         })
         .exec()
     },

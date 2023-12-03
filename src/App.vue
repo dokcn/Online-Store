@@ -13,6 +13,8 @@ onHide(() => {
 </script>
 
 <style lang="scss">
+$primary-color: #00c09d !global;
+
 // 字体图标
 @import '@/styles/fonts.scss';
 

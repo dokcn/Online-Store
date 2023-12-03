@@ -1,7 +1,12 @@
 <template>
   <view class="container" :style="{ marginTop: marginTop }">
     <view class="item-list">
-      <navigator v-for="item in productList" :key="item.id" class="item" hover-class="none">
+      <navigator
+        v-for="item in productList"
+        :key="item.id"
+        class="item"
+        :url="`/pages/product_detail/product_detail?productId=${item.id}`"
+      >
         <image :src="item.picture" mode="aspectFill" />
         <text class="description">{{ stringBlank(item.name) ? '暂无' : item.name }}</text>
         <view class="price-group">

@@ -64,7 +64,12 @@ const currentIndex = ref<number>(0)
             <text class="to-all">全部></text>
           </view>
           <view class="product-list">
-            <navigator class="product" v-for="product of levelTwo.goods" :key="product.id">
+            <navigator
+              class="product"
+              v-for="product of levelTwo.goods"
+              :key="product.id"
+              :url="`/pages/product_detail/product_detail?productId=${product.id}`"
+            >
               <image class="product-image" :src="product.picture" mode="aspectFill" />
               <text class="product-title ellipsis">{{ product.name }}</text>
               <view class="price-group">
