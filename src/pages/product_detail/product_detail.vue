@@ -2,18 +2,22 @@
 import { getProductDetailAPI } from '@/services/product_detail'
 import type { XtxProductListInstanceType } from '@/types/component'
 import type { ProductDetailResult } from '@/types/product_detail'
-import { computed, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 
+// 用于隐藏高度过长的元素 方便测试
 const booleanForTest = ref<boolean>(true)
 
+// 滚动容器的高度
 const scrollViewHeight = ref<number>(0)
+// 底栏的底部padding
 const bottomBarPaddingBottom = ref<number>(0)
 
 const { windowHeight, safeAreaInsets } = uni.getSystemInfoSync()
 
-bottomBarPaddingBottom.value = safeAreaInsets!.bottom
-if (!bottomBarPaddingBottom.value) bottomBarPaddingBottom.value = 4
+// 设置底栏的底部padding
+bottomBarPaddingBottom.value = safeAreaInsets!.bottom ?? 4
 
+// 计算滚动容器高度
 uni
   .createSelectorQuery()
   .select('.bottom-bar')
@@ -22,19 +26,36 @@ uni
   })
   .exec()
 
+// 接收页面传参
 const query = defineProps<{
   productId: string
 }>()
 
+// 保存商品信息
 const productDetailInfo = ref<ProductDetailResult>()
+// 商品详情是否有视频介绍
+const hasVideos = ref<boolean>(false)
+// 设置轮播组件索引指示器位置的样式 以防有视频时与播放控件相互遮挡
+const carouselIndicatorStyle = reactive<{ top?: string; bottom?: string }>({})
+
+// 获取商品详情并设置相应值
 const getProductDetailInfo = async (productId: string) => {
   productDetailInfo.value = (await getProductDetailAPI(productId)).result
+  hasVideos.value = productDetailInfo.value.mainVideos.length !== 0
+
+  if (hasVideos.value) {
+    carouselIndicatorStyle.top = '30rpx'
+    carouselIndicatorStyle.bottom = 'initial'
+  }
+
   setAnalogousData()
 }
 getProductDetailInfo(query.productId)
 
+// 轮播组件当前索引
 const carouselIndex = ref<number>(0)
 
+// 轮播组件索引指示器计算属性
 const indicatorText = computed(() => {
   return `${carouselIndex.value + 1}/${
     (productDetailInfo.value?.mainVideos?.length ?? 0) +
@@ -42,12 +63,35 @@ const indicatorText = computed(() => {
   }`
 })
 
+// 同类推荐组件引用
 const analogousRef = ref<XtxProductListInstanceType>()
+// 设置同类推荐组件数据
 const setAnalogousData = () => {
   const ref = analogousRef.value
   if (ref) {
     ref.beforeFetchData()
     ref.afterFetchData(productDetailInfo.value?.similarProducts)
+  }
+}
+
+// 用于保存视频元素Context
+const videoContextsMap = new Map()
+
+// 轮播组件切换页面事件
+const onSwiperItemChange = (e: UniHelper.SwiperOnChangeEvent) => {
+  carouselIndex.value = e.detail.current
+  // 轮播组件切换页面到其他页面时暂停视频播放
+  for (let i = 0; i < (productDetailInfo.value?.mainVideos?.length ?? 0); ++i) {
+    const key = `v${i}`
+    let videoContext
+    if (videoContextsMap.has(key)) videoContext = videoContextsMap.get(key)
+    else {
+      videoContext = uni.createVideoContext(`v${i}`)
+      videoContextsMap.set(key, videoContext)
+    }
+
+    if (carouselIndex.value === i) videoContext.play()
+    else videoContext.pause()
   }
 }
 </script>
@@ -85,6 +129,7 @@ page {
 
       .price-bar {
         width: 100%;
+        height: 115rpx;
         background-color: #0eceab;
         display: flex;
         align-items: baseline;
@@ -293,20 +338,31 @@ page {
       <view class="carousel" v-if="booleanForTest">
         <swiper
           class="swiper"
-          :autoplay="true"
+          :autoplay="!hasVideos"
           :interval="3000"
           circular
           :current="carouselIndex"
-          @change="(e) => (carouselIndex = e.detail.current)"
+          @change="onSwiperItemChange"
         >
-          <swiper-item v-for="video in productDetailInfo?.mainVideos" :key="video">
-            <video :src="video" />
+          <swiper-item v-for="(video, index) in productDetailInfo?.mainVideos" :key="video">
+            <video
+              :id="`v${index}`"
+              :src="video"
+              loop
+              autoplay
+              muted
+              object-fit="contain"
+              title="商品介绍"
+              show-mute-btn
+              play-btn-position="center"
+              :enable-progress-gesture="false"
+            />
           </swiper-item>
           <swiper-item v-for="image in productDetailInfo?.mainPictures" :key="image">
             <image :src="image" mode="aspectFill" />
           </swiper-item>
         </swiper>
-        <view class="indicator">
+        <view class="indicator" :style="carouselIndicatorStyle">
           <text>{{ indicatorText }}</text>
         </view>
       </view>
