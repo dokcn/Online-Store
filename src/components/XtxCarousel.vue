@@ -9,7 +9,10 @@
     >
       <swiper-item v-for="item in bannerData" :key="item.id">
         <!-- todo handle url navigation -->
-        <navigator :url="item.hrefUrl" hover-class="none" class="navigator">
+        <navigator
+          :url="`/pages/product_detail/product_detail?productId=${item.hrefUrl}`"
+          class="navigator"
+        >
           <image :src="item.imgUrl" mode="aspectFill" class="image" />
         </navigator>
       </swiper-item>

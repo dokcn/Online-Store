@@ -5,7 +5,7 @@ import type { ProductDetailResult } from '@/types/product_detail'
 import { computed, reactive, ref } from 'vue'
 
 // 用于隐藏高度过长的元素 方便测试
-const booleanForTest = ref<boolean>(true)
+const hideElementsForTest = ref<boolean>(true)
 
 // 滚动容器的高度
 const scrollViewHeight = ref<number>(0)
@@ -40,16 +40,34 @@ const carouselIndicatorStyle = reactive<{ top?: string; bottom?: string }>({})
 
 // 获取商品详情并设置相应值
 const getProductDetailInfo = async (productId: string) => {
-  productDetailInfo.value = (await getProductDetailAPI(productId)).result
-  hasVideos.value = productDetailInfo.value.mainVideos.length !== 0
+  try {
+    const result = await getProductDetailAPI(productId)
+    productDetailInfo.value = result.result
+    hasVideos.value = productDetailInfo.value.mainVideos.length !== 0
 
-  if (hasVideos.value) {
-    carouselIndicatorStyle.top = '30rpx'
-    carouselIndicatorStyle.bottom = 'initial'
+    if (hasVideos.value) {
+      carouselIndicatorStyle.top = '30rpx'
+      carouselIndicatorStyle.bottom = 'initial'
+    }
+
+    setAnalogousData()
+  } catch (error: any) {
+    // 如果未查询到商品 则返回上一页并提示
+    var message = error.data.msg
+    console.log(`query for product detail failed: %s`, message)
+    message = '商品不存在'
+
+    uni.navigateBack({
+      success() {
+        uni.showToast({
+          title: message,
+          icon: 'none',
+        })
+      },
+    })
   }
-
-  setAnalogousData()
 }
+
 getProductDetailInfo(query.productId)
 
 // 轮播组件当前索引
@@ -123,6 +141,7 @@ page {
           text {
             color: white;
             font-size: 24rpx;
+            font-family: 'Fira Code';
           }
         }
       }
@@ -335,7 +354,7 @@ page {
       scroll-y
       enable-back-to-top
     >
-      <view class="carousel" v-if="booleanForTest">
+      <view class="carousel">
         <swiper
           class="swiper"
           :autoplay="!hasVideos"
@@ -377,7 +396,7 @@ page {
         <text class="description">{{ productDetailInfo?.desc }}</text>
       </view>
 
-      <view class="info-bar" v-if="booleanForTest">
+      <view class="info-bar">
         <view class="specification-bar">
           <text class="text-left">选择</text>
           <text class="text-right">白色</text>
@@ -397,7 +416,7 @@ page {
 
       <view class="divider"></view>
 
-      <view class="detail" v-if="booleanForTest">
+      <view class="detail" v-if="!hideElementsForTest">
         <view class="title">
           <view class="border-left"></view>
           <text>详情</text>
@@ -414,11 +433,13 @@ page {
         </view>
       </view>
 
-      <view class="content-area" v-if="booleanForTest">
+      <view class="content-area">
         <image
           :src="img"
           mode="widthFix"
-          v-for="img in productDetailInfo?.details?.pictures.slice(0, 3)"
+          v-for="img in hideElementsForTest
+            ? productDetailInfo?.details?.pictures.slice(0, 3)
+            : productDetailInfo?.details?.pictures"
           :key="img"
         />
       </view>
