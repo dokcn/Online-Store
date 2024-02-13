@@ -2,7 +2,7 @@
   <view class="index">
     <view is="components/XtxCarousel">
       <view class="carousel XtxCarousel--carousel">
-        <swiper circular="true" :autoplay="true" current="0" interval="3000"></swiper>
+        <swiper :circular="true" :autoplay="true" :current="0" :interval="3000"></swiper>
         <view class="indicator XtxCarousel--indicator">
           <text class="dot XtxCarousel--dot active XtxCarousel--active"></text>
           <text class="dot XtxCarousel--dot"></text>

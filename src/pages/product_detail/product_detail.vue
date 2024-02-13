@@ -3,6 +3,7 @@ import { getProductDetailAPI } from '@/services/product_detail'
 import type { XtxProductListInstanceType } from '@/types/component'
 import type { ProductDetailResult } from '@/types/product_detail'
 import { computed, reactive, ref } from 'vue'
+import Skeleton from './components/Skeleton.vue'
 
 // 用于隐藏高度过长的元素 方便测试
 const hideElementsForTest = ref<boolean>(true)
@@ -141,7 +142,7 @@ page {
           text {
             color: white;
             font-size: 24rpx;
-            font-family: 'Fira Code';
+            font-family: 'fira-code';
           }
         }
       }
@@ -348,7 +349,9 @@ page {
 
 <template>
   <view class="container">
+    <Skeleton v-show="!productDetailInfo" />
     <scroll-view
+      v-show="productDetailInfo"
       class="scroll-view"
       :style="{ height: scrollViewHeight + 'px' }"
       scroll-y
@@ -381,7 +384,7 @@ page {
             <image :src="image" mode="aspectFill" />
           </swiper-item>
         </swiper>
-        <view class="indicator" :style="carouselIndicatorStyle">
+        <view class="indicator" :style="carouselIndicatorStyle" v-if="productDetailInfo">
           <text>{{ indicatorText }}</text>
         </view>
       </view>

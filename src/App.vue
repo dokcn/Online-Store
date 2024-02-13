@@ -17,6 +17,7 @@ $primary-color: #00c09d !global;
 
 // 字体图标
 @import '@/styles/fonts.scss';
+@import '@/styles/firacode.css';
 
 view,
 navigator,

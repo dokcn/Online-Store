@@ -6,6 +6,7 @@
         :key="item.id"
         class="item"
         :url="`/pages/product_detail/product_detail?productId=${item.id}`"
+        @longpress="(event) => longpress(event, item.id)"
       >
         <image :src="item.picture" mode="aspectFill" />
         <text class="description">{{ stringBlank(item.name) ? '暂无' : item.name }}</text>
@@ -74,6 +75,14 @@ const emits = defineEmits(['componentLoaded'])
 onBeforeMount(() => {
   emits('componentLoaded')
 })
+
+function longpress(event: any, productId: string) {
+  console.log(event, productId)
+  uni.showToast({
+    title: productId,
+    icon: 'none',
+  })
+}
 </script>
 
 <style lang="scss">

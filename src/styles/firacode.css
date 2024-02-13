@@ -1,0 +1,7 @@
+@font-face {
+  font-family: 'fira-code';
+  src: local('Fira Code'),
+    url(https://my-fonts.oss-cn-beijing.aliyuncs.com/FiraCode-Regular.woff2?Expires=1707840112&OSSAccessKeyId=TMP.3KfDW8Jsnn37ForJmXjuVshMsjDgs4dBu7rYkJ2CxNgVvKDUg4k4FbER59Kfox1y5Fx4UD5zdbXLWfSHMU94EgLjHdc3Zx&Signature=HOnX3d3z2NbSvGymk%2BXfwKNDJ54%3D) format('woff2'),
+    url(https://fonts.cdnfonts.com/s/55487/FiraCode-Regular.woff) format('woff'),
+    url('../static/fonts/FiraCode-Regular.woff2');
+}
