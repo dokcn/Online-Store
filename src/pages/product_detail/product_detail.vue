@@ -6,7 +6,7 @@ import { computed, reactive, ref } from 'vue'
 import Skeleton from './components/Skeleton.vue'
 
 // 用于隐藏高度过长的元素 方便测试
-const hideElementsForTest = ref<boolean>(true)
+const hideElementsForTest = ref<boolean>(false)
 
 // 滚动容器的高度
 const scrollViewHeight = ref<number>(0)
@@ -100,6 +100,7 @@ const videoContextsMap = new Map()
 const onSwiperItemChange = (e: UniHelper.SwiperOnChangeEvent) => {
   carouselIndex.value = e.detail.current
   // 轮播组件切换页面到其他页面时暂停视频播放
+  // todo: refine this, remove for loop, just change play status at old index and new index
   for (let i = 0; i < (productDetailInfo.value?.mainVideos?.length ?? 0); ++i) {
     const key = `v${i}`
     let videoContext

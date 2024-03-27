@@ -15,8 +15,8 @@
           </view>
         </view>
         <view class="price-bar">
-          <text class="rmb-sign sk-transparent sk-text-14-2857-110 sk-text">￥</text>
-          <text class="price sk-transparent sk-text-14-2857-295 sk-text">83.90</text>
+          <!-- <text class="rmb-sign sk-transparent sk-text-14-2857-110 sk-text">￥</text> -->
+          <!-- <text class="price sk-transparent sk-text-14-2857-295 sk-text">83.90</text> -->
         </view>
         <view class="description-bar">
           <text class="title sk-transparent sk-text-14-2857-82 sk-text"

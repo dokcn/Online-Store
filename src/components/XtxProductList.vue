@@ -77,7 +77,7 @@ onBeforeMount(() => {
 })
 
 function longpress(event: any, productId: string) {
-  console.log(event, productId)
+  // console.log(event, productId)
   uni.showToast({
     title: productId,
     icon: 'none',
