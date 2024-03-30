@@ -114,35 +114,93 @@ const onSwiperItemChange = (e: UniHelper.SwiperOnChangeEvent) => {
     else videoContext.pause()
   }
 }
+
+function previewCarouselImage(event: UniHelper.BaseEvent) {
+  uni.previewImage({
+    current: event?.target?.dataset?.sourceUrl,
+    urls: productDetailInfo.value!.mainPictures,
+  })
+}
+
+const paramsForServicePopup = reactive({
+  showPopup: false,
+  // popupHeight: 40,
+  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+  // closeButtonSize: 30
+})
 </script>
 
 <style lang="scss">
 page {
   .container {
     background-color: rgb(244, 244, 244);
+
+    .services {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .services-title {
+        font-size: 35rpx;
+        padding: 10rpx;
+      }
+
+      .services-divider {
+        width: 100%;
+        height: 1rpx;
+        background-color: rgb(210 210 210 / 40%);
+        margin: 15rpx;
+      }
+
+      .services-part-title {
+        align-self: flex-start;
+        font-weight: bold;
+        font-size: 30rpx;
+        position: relative;
+        margin: 20rpx;
+
+        &::before {
+          content: '·';
+          position: absolute;
+          left: -20rpx;
+          color: rgb(181, 181, 181);
+        }
+      }
+
+      .services-part-content {
+        font-size: 26rpx;
+        color: gray;
+        padding: 0 20rpx;
+      }
+    }
+
     .scroll-view {
       .carousel {
         position: relative;
+
         .swiper {
           height: 750rpx;
+
           swiper-item image,
           swiper-item video {
             width: 750rpx;
             height: 750rpx;
           }
         }
+
         .indicator {
           position: absolute;
           right: 30rpx;
           bottom: 30rpx;
           background-color: rgba(40, 40, 40, 0.5);
           border-radius: 40rpx;
-          padding: 6rpx 32rpx;
+          padding: 10rpx 26rpx;
           display: flex;
           align-items: center;
+
           text {
             color: white;
-            font-size: 24rpx;
+            // font-size: 28rpx;
             font-family: 'fira-code';
           }
         }
@@ -155,13 +213,16 @@ page {
         display: flex;
         align-items: baseline;
         padding: 18rpx 0 18rpx 25rpx;
+
         text {
           color: white;
           flex-grow: 0;
         }
+
         .rmb-sign {
           font-size: 38rpx;
         }
+
         .price {
           font-size: 60rpx;
         }
@@ -172,10 +233,12 @@ page {
         padding-left: 20rpx;
         display: flex;
         flex-flow: column nowrap;
+
         .title {
           font-size: 32rpx;
           padding: 30rpx 0 20rpx 0;
         }
+
         .description {
           padding-bottom: 30rpx;
           font-size: 26rpx;
@@ -194,6 +257,7 @@ page {
           padding: 18rpx 0;
           align-items: center;
           position: relative;
+
           &::before {
             content: '';
             position: absolute;
@@ -204,15 +268,19 @@ page {
             background-color: rgb(234, 234, 234);
           }
         }
+
         $font-size: 26rpx;
+
         .text-left {
           font-size: $font-size;
           color: rgb(118, 118, 118);
         }
+
         .text-right {
           margin-left: 30rpx;
           font-size: $font-size;
         }
+
         .arrow {
           color: rgb(223, 223, 223);
           font-size: $font-size + 15rpx;
@@ -229,9 +297,11 @@ page {
       .detail {
         background-color: white;
         padding-bottom: 40rpx;
+
         .title {
           position: relative;
           padding: 25rpx 25rpx 28rpx 25rpx;
+
           .border-left {
             position: absolute;
             top: 30%;
@@ -239,15 +309,18 @@ page {
             left: 20rpx;
             border-left: 7rpx #0eceab solid;
           }
+
           text {
             margin-left: 12rpx;
             font-size: 37rpx;
             font-weight: bolder;
           }
         }
+
         .spec-item-list {
           display: flex;
           flex-flow: column nowrap;
+
           .spec-item {
             padding: 20rpx 10rpx;
             margin: 0 15rpx;
@@ -258,6 +331,7 @@ page {
               flex-basis: 28%;
               flex-shrink: 0;
             }
+
             .name,
             .value {
               font-size: 28rpx;
@@ -274,12 +348,14 @@ page {
           display: flex;
           align-items: center;
           margin: 15rpx 0;
+
           .analogous-title {
             font-size: 34rpx;
             font-weight: bold;
             margin-left: 6rpx;
             padding-left: 20rpx;
             position: relative;
+
             &::before {
               position: absolute;
               content: '';
@@ -291,6 +367,7 @@ page {
             }
           }
         }
+
         .analogous-list {
           padding: 0 5rpx 25rpx;
         }
@@ -310,6 +387,7 @@ page {
       justify-content: space-evenly;
       align-items: center;
       border-top: #dadada solid 2rpx;
+
       .collect-button,
       .customer-service-button,
       .shopping-cart-button {
@@ -317,10 +395,12 @@ page {
         flex-direction: column;
         align-items: center;
         padding: 0 20rpx;
+
         text[class|='icon'] {
           font-size: 30rpx;
           margin-bottom: 6rpx;
         }
+
         text:nth-child(2) {
           font-size: 22rpx;
         }
@@ -337,9 +417,11 @@ page {
         justify-content: center;
         align-items: center;
       }
+
       .add-to-cart-button {
         background-color: #ffa868;
       }
+
       .buy-now-button {
         background-color: #27ba9b;
       }
@@ -351,6 +433,29 @@ page {
 <template>
   <view class="container">
     <Skeleton v-show="!productDetailInfo" />
+    <XtxPopupLayer
+      @closePopup="paramsForServicePopup.showPopup = false"
+      v-bind="paramsForServicePopup"
+    >
+      <template #content>
+        <view class="services">
+          <view class="services-title"> 服务说明 </view>
+          <view class="services-divider"></view>
+          <view class="services-part-title"> 无忧退货 </view>
+          <view class="services-part-content">
+            自收到商品之日起30天内，可在线申请无忧退货服务（食品等特殊商品外）</view
+          >
+          <view class="services-part-title"> 快速退款 </view>
+          <view class="services-part-content">
+            收到退货包裹并确认无误后，将在48小时内办理退款，退款将原路返回，不同银行处理时间不同，预计1-5个工作日
+          </view>
+          <view class="services-part-title"> 满88元免邮费 </view>
+          <view class="services-part-content">
+            单笔订单金额（不含运费）88元可免邮费，不满88元，单笔订单收取10元邮费
+          </view>
+        </view>
+      </template>
+    </XtxPopupLayer>
     <scroll-view
       v-show="productDetailInfo"
       class="scroll-view"
@@ -382,7 +487,12 @@ page {
             />
           </swiper-item>
           <swiper-item v-for="image in productDetailInfo?.mainPictures" :key="image">
-            <image :src="image" mode="aspectFill" />
+            <image
+              @tap="previewCarouselImage"
+              :data-source-url="image"
+              :src="image"
+              mode="aspectFill"
+            />
           </swiper-item>
         </swiper>
         <view class="indicator" :style="carouselIndicatorStyle" v-if="productDetailInfo">
@@ -406,13 +516,13 @@ page {
           <text class="text-right">白色</text>
           <text class="arrow">></text>
         </view>
-        <view class="address-bar"
-          ><text class="text-left">送至</text>
+        <view class="address-bar">
+          <text class="text-left">送至</text>
           <text class="text-right">请选择收货地址</text>
           <text class="arrow">></text>
         </view>
-        <view class="services-bar"
-          ><text class="text-left">服务</text>
+        <view class="services-bar" @tap="paramsForServicePopup.showPopup = true">
+          <text class="text-left">服务</text>
           <text class="text-right">无忧退 快速退款 免费包邮</text>
           <text class="arrow">></text>
         </view>

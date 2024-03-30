@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'fira-code';
   src: local('Fira Code'),
-    url(https://fonts.cdnfonts.com/s/55487/FiraCode-Regular.woff) format('woff'),
+    /* url(https://fonts.cdnfonts.com/s/55487/FiraCode-Regular.woff) format('woff'), */
     url('../static/fonts/FiraCode-Regular.woff2');
 }
